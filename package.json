@@ -1,0 +1,25 @@
+{
+  "name": "batch-minter",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "ts-node --esm index.ts"
+  },
+  "dependencies": {
+    "@ledgerhq/hw-transport-node-hid": "^6.27.13",
+    "@taquito/beacon-wallet": "^16.1.2",
+    "@taquito/ledger-signer": "^16.1.2",
+    "@taquito/signer": "^16.1.2",
+    "@taquito/taquito": "^16.1.2",
+    "@taquito/utils": "^16.1.2",
+    "@types/node": "18.16.0",
+    "dotenv": "^16.0.3",
+    "eslint": "8.39.0",
+    "eslint-config-next": "13.3.1",
+    "ipfs-http-client": "^60.0.0",
+    "sharp": "^0.32.0",
+    "ts-node": "^10.9.1",
+    "typescript": "5.0.4"
+  }
+}
