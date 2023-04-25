@@ -162,6 +162,7 @@ const makeToken = async ({image, name, description, tags, attributes, creators}:
     const displayImageMetadata = (await displayImageSharp.toBuffer({resolveWithObject: true})).info
     const thumbnailImageSharp = resizeImage(file, 350);
     const thumbnailImageMetadata = (await thumbnailImageSharp.toBuffer({resolveWithObject: true})).info
+
     const artifactUri = await addToIpfs(file);
     const displayUri = await addToIpfs(await displayImageSharp.toBuffer());
     const thumbnailUri = await addToIpfs(await thumbnailImageSharp.toBuffer());
@@ -172,7 +173,7 @@ const makeToken = async ({image, name, description, tags, attributes, creators}:
         artifactUri,
         displayUri,
         thumbnailUri,
-        creators: ["tz1PwBHUVht6QmKWTd3fAAgx3BHM9RBjCLt2"],
+        creators,
         attributes,
         tags,
         formats: [
@@ -186,19 +187,12 @@ const makeToken = async ({image, name, description, tags, attributes, creators}:
 
 const tokens: TokenData[] = [
     {
-        image: '__orderandchaos_a_dramatic_epic_ethereal_portrait_of_a_female_r_c71661c2-c6c7-485b-a791-6eb908d6b955.png',
-        name: 'Svetlana Grigoryeva',
-        description: "Svetlana Grigoryeva, a renowned female Rus' swordsman, has etched her name in the annals of swordsmanship with her exceptional skill and unwavering determination. Born into a family with an esteemed legacy of martial prowess, Svetlana discovered her passion for swordplay at a young age.",
-        tags: ["RPG", "Character", "Battler", "Rus'", "Swordsman"],
+        image: 'put_images_in_files_dir_put_image_file_name_here',
+        name: 'name_here',
+        description: "description_here",
+        tags: ["tags", "here"],
         attributes: [
-            {name: 'Culture', value: "Rus'"},
-            {name: 'Class', value: 'Swordsman'},
-            {name: 'Strength', value: `${~~(Math.random() * 6) + ~~(Math.random() * 6) + ~~(Math.random() * 6) + 3}`},
-            {
-                name: 'Intelligence',
-                value: `${~~(Math.random() * 6) + ~~(Math.random() * 6) + ~~(Math.random() * 6) + 3}`
-            },
-            {name: 'Dexterity', value: `${~~(Math.random() * 6) + ~~(Math.random() * 6) + ~~(Math.random() * 6) + 3}`}
+            {name: 'name_here', value: "value_here"},
         ],
         creators: [creatorAddress]
     },
