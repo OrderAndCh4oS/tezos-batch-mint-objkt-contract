@@ -11,11 +11,14 @@ config()
 if (!process.env.TOKEN_ID) throw new Error('Missing TOKEN_ID')
 
 const tokenId: number = Number(process.env.TOKEN_ID);
-const creators: string[] = ["tzAddressHerexxxxxxx"]; // Note: The first address in creators should be the signed wallet.
+
+// Note: The first address in creators should be the signed wallet.
+const creators: string[] = ["tz1PwBHUVht6QmKWTd3fAAgx3BHM9RBjCLt2"];
 const royalties: TzipRoyalties = {
     decimals: 4,
     shares: {
-        "tzAddressHerexxxxxxx": 1000
+        "tz1PwBHUVht6QmKWTd3fAAgx3BHM9RBjCLt2": 500,
+        "tz1KySTBB8RXWVraggfXWLaLR9H3K3JBEbgt": 500
     }
 }; // 1000 = 10%
 const tokenQty: number = 1;
@@ -217,9 +220,7 @@ for (const token of tokens) {
 console.log('Metadata:\n', metadataHashes);
 
 const Tezos = new TezosToolkit('https://mainnet.tezos.marigold.dev/');
-Tezos.setProvider({
-    signer,
-});
+Tezos.setProvider({signer});
 
 const minterContractAddress: string = 'KT1Aq4wWmVanpQhq4TTfjZXB5AjFpx15iQMM';
 const minter = await Tezos.wallet.at(minterContractAddress)
