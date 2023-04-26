@@ -178,7 +178,7 @@ const makeToken = async ({image, name, description, tags, attributes, creators, 
     return addToIpfs(Buffer.from(JSON.stringify(metadata)));
 };
 
-export default async function mintTokens(tokenId: number, tokenQty: number, creators: string[], tokens: TokenData[]) {
+export default async function mintTokens(contractId: number, tokenQty: number, creators: string[], tokens: TokenData[]) {
     const metadataHashes = [];
 
     for (const token of tokens) {
@@ -198,7 +198,7 @@ export default async function mintTokens(tokenId: number, tokenQty: number, crea
             kind: OpKind.TRANSACTION,
             ...minter.methods
                 .mint_artist(
-                    tokenId,
+                    contractId,
                     tokenQty,
                     char2Bytes(metadataHash),
                     creators[0] // Note: This assumes the first address in creators is the signed wallet.

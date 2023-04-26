@@ -3,9 +3,9 @@ import {config} from "dotenv";
 
 config()
 
-if (!process.env.TOKEN_ID) throw new Error('Missing TOKEN_ID')
+if (!process.env.CONTRACT_ID) throw new Error('Missing CONTRACT_ID')
 
-const tokenId: number = Number(process.env.TOKEN_ID);
+const contractId: number = Number(process.env.CONTRACT_ID);
 const tokenQty: number = 1;
 // Note: The first address in creators should be the signed wallet.
 const creators: string[] = ["tz1PwBHUVht6QmKWTd3fAAgx3BHM9RBjCLt2"];
@@ -30,4 +30,4 @@ const tokens: TokenData[] = [
     },
 ]
 
-await mintTokens(tokenId, tokenQty, creators, tokens);
+await mintTokens(contractId, tokenQty, creators, tokens);
