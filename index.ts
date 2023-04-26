@@ -8,11 +8,16 @@ import signer from "./dangerous-in-memory-signer.ts";
 
 config()
 
-if(!process.env.TOKEN_ID || !process.env.CREATOR_ADDRESS) throw new Error('Missing TOKEN_ID or CREATOR_ADDRESS')
+if (!process.env.TOKEN_ID) throw new Error('Missing TOKEN_ID')
 
-const tokenId: number = Number(process.env.TOKEN_ID); // NOTE: REPLACE WITH YOUR TOKEN ID
-const creatorAddress: string = process.env.CREATOR_ADDRESS; // NOTE: REPLACE WITH YOUR WALLET ADDRESS
-const royalties: number = 1000; // 1000 = 10%
+const tokenId: number = Number(process.env.TOKEN_ID);
+const creators: string[] = ["tzAddressHerexxxxxxx"]; // Note: The first address in creators should be the signed wallet.
+const royalties: TzipRoyalties = {
+    decimals: 4,
+    shares: {
+        "tzAddressHerexxxxxxx": 1000
+    }
+}; // 1000 = 10%
 const tokenQty: number = 1;
 
 interface Tzip {
@@ -67,7 +72,8 @@ interface MetadataPayload {
     description: string,
     tags: string[],
     attributes: TzipAttributes[],
-    formats: TzipFormat[]
+    formats: TzipFormat[],
+    royalties: TzipRoyalties
 }
 
 const makeMetadata = (
@@ -81,6 +87,7 @@ const makeMetadata = (
         description,
         tags,
         attributes,
+        royalties
     }: MetadataPayload
 ): Tzip => ({
     artifactUri,
@@ -96,7 +103,7 @@ const makeMetadata = (
     mintingTool: "orderandchaos_batch_script_v1",
     name,
     rights: "No License / All Rights Reserved",
-    royalties: {decimals: 4, shares: {[creatorAddress]: royalties}}, // Todo: handle creator splits
+    royalties, // Todo: handle creator splits
     symbol: 'OBJKTCOM',
     tags,
     attributes
@@ -140,7 +147,8 @@ interface TokenData {
     description: string,
     tags: string[],
     attributes: TzipAttributes[],
-    creators: string[]
+    creators: string[],
+    royalties: TzipRoyalties
 }
 
 async function makeFormat(fileName: string, uri: string, metadata: sharp.Metadata | sharp.OutputInfo): Promise<TzipFormat> {
@@ -153,7 +161,7 @@ async function makeFormat(fileName: string, uri: string, metadata: sharp.Metadat
     };
 }
 
-const makeToken = async ({image, name, description, tags, attributes, creators}: TokenData) => {
+const makeToken = async ({image, name, description, tags, attributes, creators, royalties}: TokenData) => {
     const file = await loadFile(`./files/${image}`);
     if (!file) throw new Error(`File not loaded: ${image}`);
     const imageSharp = await sharp(file)
@@ -174,6 +182,7 @@ const makeToken = async ({image, name, description, tags, attributes, creators}:
         displayUri,
         thumbnailUri,
         creators,
+        royalties,
         attributes,
         tags,
         formats: [
@@ -194,7 +203,8 @@ const tokens: TokenData[] = [
         attributes: [
             {name: 'name_here', value: "value_here"},
         ],
-        creators: [creatorAddress]
+        creators,
+        royalties
     },
 ]
 
@@ -218,7 +228,12 @@ await Tezos.wallet.batch(
     metadataHashes.map(metadataHash => ({
         kind: OpKind.TRANSACTION,
         ...minter.methods
-            .mint_artist(tokenId, tokenQty, char2Bytes(metadataHash), creatorAddress)
+            .mint_artist(
+                tokenId,
+                tokenQty,
+                char2Bytes(metadataHash),
+                creators[0] // Note: This assumes the first address in creators is the signed wallet.
+            )
             .toTransferParams({storageLimit: 350}),
     }))).send()
 
